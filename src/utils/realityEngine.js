@@ -162,7 +162,11 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
 
     // Heuristic Scoring
     Object.keys(REALITY_WEIGHTS).forEach(key => {
-        if (text.includes(key)) {
+        // Robust Matching: Use Regex with Word Boundaries
+        // Escaping special characters if any (though unlikely in our key set)
+        const regex = new RegExp(`\\b${key}\\b`, 'i');
+
+        if (regex.test(text)) {
             // Check for local negation
             const negIndex = words.findIndex(w => negationWords.includes(w))
             const keyIndex = text.indexOf(key)
@@ -172,7 +176,6 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
             // Smart Negation: If "not" appears ~15 chars before the keyword, FLIP the weight
             if (negIndex !== -1 && keyIndex > -1 && MatchIsNegated(text, key, negationWords)) {
                 weight = -weight * 0.5; // Flip it and reduce impact slightly
-                //   console.log(`Negation detected for ${key}: New weight ${weight}`)
             }
 
             baseScore += weight
@@ -182,7 +185,8 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
 
     // 2. Intensity Multipliers
     Object.keys(INTENSITY_MULTIPLIERS).forEach(key => {
-        if (text.includes(key)) {
+        const regex = new RegExp(`\\b${key}\\b`, 'i');
+        if (regex.test(text)) {
             multiplier *= INTENSITY_MULTIPLIERS[key]
             matchCount++
         }
