@@ -22,6 +22,31 @@ const LOADING_MESSAGES = [
   "Decrypting dream state...",
 ]
 
+const REALITY_WEIGHTS = {
+  // Delusional (Negative Weights)
+  'billionaire': -60, 'millionaire': -40, 'trillionaire': -80, 'never': -30,
+  'always': -30, 'quit job': -50, 'perfect': -40, 'ceo': -40, 'astronaut': -60,
+  'marry': -40, 'famous': -50, 'hollywood': -60, 'president': -80, 'mars': -70,
+  'lottery': -90, 'passive income': -40, 'crypto': -30, '100%': -20,
+  'quit sugar': -40, 'no sugar': -40, 'six pack': -30, 'abs': -20,
+
+  // Realistic/Achievable (Positive Weights)
+  'water': 25, 'walk': 20, 'sleep': 25, 'friend': 15, 'eat': 10, 'vegetable': 20,
+  'fruit': 20, 'try': 15, 'maybe': 10, 'once': 10, 'book': 15, 'class': 15,
+  'call': 20, 'mom': 25, 'dad': 25, 'text': 15, 'clean': 20, 'drink': 10,
+  'study': 15, 'save': 15, 'invest': 10, 'floss': 30,
+
+  // Optimistic (Neutral/Slight Positive)
+  'gym': 5, 'run': 5, 'code': 5, 'learn': 10, 'read': 10, 'job': 10,
+  'promotion': 5, 'language': 5, 'meditate': 10, 'diet': 0
+}
+
+const INTENSITY_MULTIPLIERS = {
+  'daily': 0.85, 'every': 0.85, 'day': 0.9, 'always': 0.5, 'never': 0.5,
+  'completely': 0.6, 'forever': 0.4, 'strictly': 0.7, 'perfectly': 0.5,
+  '100%': 0.6
+}
+
 const ROASTS = {
   achievable: [
     "Wow, a reasonable human being. Rare.",
@@ -51,6 +76,28 @@ const ROASTS = {
     "Pure sci-fi. I love it.",
     "Sir, this is a Wendy's.",
     "Have you considered therapy instead?",
+  ],
+  developer: [
+    "Git push --force your life?",
+    "You can't sudo make me believe that.",
+    "404: Willpower not found.",
+    "Reading the docs > Solving life problems.",
+    "Refactor your expectations.",
+    "Is this deployed to prod or just localhost?",
+  ],
+  trader: [
+    "Leverage 100x on verify failure.",
+    "Liquidation price hit immediately.",
+    "Shorting your success rate.",
+    "Buy high, sell your dreams low.",
+    "This is financial advice: Don't.",
+  ],
+  student: [
+    "GPA is temporary, burnout is forever.",
+    "Fixing sleep schedule? In this economy?",
+    "Academic weapon? More like academic victim.",
+    "Study break is over. Get back to work.",
+    "The mitochondria is the powerhouse of your stress.",
   ]
 }
 
@@ -58,11 +105,9 @@ const TRENDING_PRESETS = [
   "Drink 3L water daily",
   "Quit sugar completely",
   "Learn Rust & Go",
-  "Run a marathon",
   "Save $100k",
-  "75 Hard Challenge",
   "Wake up at 5AM",
-  "Digital Detox",
+  "Become a crypto whale",
 ]
 
 function App() {
@@ -110,72 +155,109 @@ function App() {
       clearInterval(msgInterval)
       setLoading(false)
 
-      // Improved Logic with Regex
+      // REALITY ENGINE 2.0
       const text = input.toLowerCase()
-      let score = 50
+      let baseScore = 50
+      let multiplier = 1.0
+      let matchCount = 0
+
+      // 1. Keyword Analysis with Negation Handling
+      const words = text.split(/\s+/)
+      const negationWords = ['not', "won't", "don't", 'stop', 'quit', 'no', 'never']
+
+      // Heuristic Scoring
+      Object.keys(REALITY_WEIGHTS).forEach(key => {
+        if (text.includes(key)) {
+          // Check for local negation
+          // We check if a negation word appears *before* this match in the raw text index
+          const negIndex = words.findIndex(w => negationWords.includes(w))
+          const keyIndex = text.indexOf(key)
+
+          let weight = REALITY_WEIGHTS[key]
+
+          // Smart Negation: If "not" appears ~15 chars before the keyword, FLIP the weight
+          if (negIndex !== -1 && keyIndex > -1 && MatchIsNegated(text, key, negationWords)) {
+            weight = -weight * 0.5; // Flip it and reduce impact slightly
+            console.log(`Negation detected for ${key}: New weight ${weight}`)
+          }
+
+          baseScore += weight
+          matchCount++
+        }
+      })
+
+      // 2. Intensity Multipliers
+      Object.keys(INTENSITY_MULTIPLIERS).forEach(key => {
+        if (text.includes(key)) {
+          multiplier *= INTENSITY_MULTIPLIERS[key]
+          matchCount++
+        }
+      })
+
+      // 3. Final Calculation
+      let finalScore = baseScore * multiplier
+      finalScore = Math.min(Math.max(finalScore, 5), 100)
+      finalScore = Math.round(finalScore)
+
+      // 4. Categorization & Roast Selection
       let category = 'optimistic'
+      let roastPool = ROASTS.optimistic
 
-      const delusionalKeywords = ['billionaire', 'millionaire', 'trillionaire', 'never', 'always', 'quit job', 'perfect', 'ceo', 'astronaut', 'marry', 'famous', 'hollywood', 'president', 'mars', 'lottery', 'passive income', 'crypto whale', '100%', 'quit sugar', 'completely', 'forever', 'perfectly', 'no sugar']
-      const optimisticKeywords = ['gym', 'every day', 'daily', 'read', 'learn', 'code', 'job', 'promotion', 'run', 'marathon', 'floss', 'save', 'invest', 'language', 'sober', 'write', 'book', '75 hard', 'meditate', 'diet']
-      const achievableKeywords = ['water', 'walk', 'sleep', 'friend', 'eat', 'try', 'maybe', 'once', 'book', 'class', 'vegetable', 'call', 'mom', 'dad', 'text', 'clean', 'drink', 'study']
-
-      // Regex matching for whole words to avoid false positives
-      const countMatches = (keywords) => {
-        return keywords.filter(k => {
-          const regex = new RegExp(`\\b${k}\\b`, 'i');
-          return regex.test(text);
-        }).length;
-      }
-
-      let delCount = countMatches(delusionalKeywords)
-      let optCount = countMatches(optimisticKeywords) // "diet" is here now
-      let achCount = countMatches(achievableKeywords)
-
-      // LOGIC INVERSION: High Score = Realism/Success Chance
-      if (text.length < 5) {
-        score = 5; category = 'delusional' // Too short = invalid/delusional
-      } else if (delCount > 0) {
-        // Delusional: Score 0-30%
-        score = Math.max(0, 30 - (delCount * 10));
-        category = 'delusional'
-      } else if (optCount > 2) {
-        // Too many optimistic goals -> leans delusional
-        score = 40;
-        category = 'optimistic';
-      } else if (optCount > 0) {
-        // Optimistic: Score 40-70%
-        score = 50 + (optCount * 5);
-        category = 'optimistic'
-      } else if (achCount > 0) {
-        // Achievable: Score 75-100%
-        score = 80 + (achCount * 5);
+      if (finalScore >= 80) {
         category = 'achievable'
-      } else {
-        // Fallback - assume slightly optimistic but unknown
-        score = 50;
-        category = 'optimistic';
+        roastPool = ROASTS.achievable
+      } else if (finalScore <= 35) {
+        category = 'delusional'
+        roastPool = ROASTS.delusional
       }
 
-      score = Math.min(Math.max(score, 0), 100)
+      // Context-Aware Roasts
+      if (text.includes('code') || text.includes('app') || text.includes('api') || text.includes('rust')) {
+        roastPool = [...roastPool, ...ROASTS.developer]
+      } else if (text.includes('crypto') || text.includes('stock') || text.includes('trade') || text.includes('money')) {
+        roastPool = [...roastPool, ...ROASTS.trader]
+      } else if (text.includes('study') || text.includes('exam') || text.includes('gpa') || text.includes('school')) {
+        roastPool = [...roastPool, ...ROASTS.student]
+      }
 
-      const roastList = ROASTS[category]
-      const roast = roastList[Math.floor(Math.random() * roastList.length)]
+      // Safely get roast
+      if (!roastPool || roastPool.length === 0) roastPool = ROASTS.optimistic
+      const roast = roastPool[Math.floor(Math.random() * roastPool.length)]
 
-      const newResult = { score, category, roast, input }
+      // 5. Confidence Score (Simple Heuristic for now)
+      const confidence = Math.min(matchCount * 15 + (text.length > 20 ? 10 : 0), 99)
+
+      if (isMatrix) {
+        // Matrix Theme Overrides
+        if (category === 'delusional') finalScore = 1; // Agent Smith says no
+        if (category === 'achievable') finalScore = 99; // The One
+      }
+
+      const newResult = { category, score: finalScore, roast, confidence }
       setResult(newResult)
-      setHistory([newResult, ...history])
+      setHistory(prev => [newResult, ...prev])
 
       if (category === 'achievable') {
-        triggerConfetti()
         playSuccess()
+        triggerConfetti()
       } else if (category === 'delusional') {
         playFail()
       } else {
-        playSuccess()
+        playSuccess() // Neutral/Optimistic sound
       }
 
-    }, 2000)
+    }, 800)
   }
+
+  // Helper for negation detection
+  const MatchIsNegated = (fullText, keyword, negationList) => {
+    const idx = fullText.indexOf(keyword);
+    if (idx < 3) return false;
+
+    const precedingText = fullText.substring(Math.max(0, idx - 15), idx); // Check last 15 chars
+    return negationList.some(neg => precedingText.includes(neg));
+  }
+
 
   const reset = () => {
     playClick()
