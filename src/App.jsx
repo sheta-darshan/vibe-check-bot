@@ -198,6 +198,22 @@ function App() {
         scale: 3,
         useCORS: true,
         logging: true,
+        onclone: (clonedDoc) => {
+          // Fix for Glitch Text: Remove the class to prevent overlapping/distorted text in screenshot
+          const glitchElement = clonedDoc.querySelector('.glitch-text');
+          if (glitchElement) {
+            glitchElement.classList.remove('glitch-text');
+            glitchElement.style.textShadow = 'none'; // Ensure clean look
+            glitchElement.style.color = '#ffffff';
+          }
+
+          // Ensure Input Text is highly visible
+          const italicText = clonedDoc.querySelector('.italic');
+          if (italicText) {
+            italicText.style.color = '#fff';
+            italicText.style.textShadow = '0 2px 10px rgba(0,0,0,0.5)';
+          }
+        }
       })
 
       const dataUrl = canvas.toDataURL('image/png')
