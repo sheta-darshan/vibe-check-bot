@@ -458,7 +458,7 @@ function App() {
 
       {/* Footer */}
       <div className="fixed bottom-4 text-center w-full text-[10px] text-gray-600 font-mono uppercase tracking-widest opacity-50 hover:opacity-100 transition-opacity pointer-events-none">
-        © 2026 REALITY CORP • NO REFUNDS ON DREAMS
+        © 2026 Darshankumar Sheta • NO REFUNDS ON DREAMS
       </div>
     </div>
   )

@@ -19,12 +19,6 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
             {/* Result Card for Capture */}
             <div ref={resultCardRef} className="bg-gradient-to-br from-[#1a0b2e] to-[#2d1b4e] p-8 rounded-xl border border-white/10 shadow-2xl relative overflow-hidden group max-w-md mx-auto">
 
-                {/* Certified Badge */}
-                <div className="absolute top-4 right-4 flex items-center gap-1 opacity-70">
-                    <ShieldCheck className="w-5 h-5 text-neon-gold" />
-                    <span className="text-[10px] font-mono text-neon-gold tracking-widest uppercase border border-neon-gold/30 px-2 py-0.5 rounded">Verified</span>
-                </div>
-
                 {/* Decorative Elements for Screenshot */}
                 <div className="absolute top-0 left-0 p-4 opacity-30 pointer-events-none">
                     <div className="w-24 h-24 bg-gradient-to-br from-neon-blue to-neon-pink rounded-full blur-[50px]" />
@@ -86,7 +80,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                     </div>
                     <div className="text-right">
                         <div className="text-[10px] text-gray-500 font-mono">{timestamp}</div>
-                        <div className="text-[10px] text-gray-600 font-mono uppercase">Official Analysis</div>
+                        {/* Removed Official Analysis Text */}
                     </div>
                 </div>
             </div>
