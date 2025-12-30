@@ -233,7 +233,7 @@ function App() {
         if (category === 'achievable') finalScore = 99; // The One
       }
 
-      const newResult = { category, score: finalScore, roast, confidence }
+      const newResult = { category, score: finalScore, roast, confidence, input }
       setResult(newResult)
       setHistory(prev => [newResult, ...prev])
 
