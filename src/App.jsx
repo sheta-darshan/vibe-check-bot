@@ -47,6 +47,45 @@ const INTENSITY_MULTIPLIERS = {
   '100%': 0.6
 }
 
+const DIRECT_HITS = {
+  'gym': [
+    "We both know you're canceling that membership in Feb.",
+    "Don't buy the outfit before you do the workout.",
+    "Planet Fitness doesn't count as a personality trait.",
+  ],
+  'marathon': [
+    "Your knees already filed a restraining order.",
+    "Running away from your problems? Classic.",
+    "The only thing you're running is out of excuses.",
+  ],
+  'startup': [
+    "Is it an AI wrapper? Be honest.",
+    "Pre-revenue or pre-reality?",
+    "Let me guess, you're the 'Idea Guy'?",
+    "Disrupting the industry? How about disrupting your sleep schedule first.",
+  ],
+  'tiktok': [
+    "Viral fame isn't a retirement plan.",
+    "Please, no more POV videos.",
+    "The algorithm hates you, and so do I.",
+  ],
+  'read': [
+    "Buying books isn't reading them.",
+    "Audiobooks at 2x speed don't count.",
+    "Tsundoku level: Expert.",
+  ],
+  'write': [
+    "ChatGPT is writing it, aren't they?",
+    "The world doesn't need another memoir.",
+    "Writer's block? Or just laziness?",
+  ],
+  'travel': [
+    "Running away to Bali won't fix your internal monologue.",
+    "Digital Nomad? More like Digital Homeless.",
+    "Your Instagram needs verify, your wallet needs help.",
+  ]
+}
+
 const ROASTS = {
   achievable: [
     "Wow, a reasonable human being. Rare.",
@@ -84,6 +123,7 @@ const ROASTS = {
     "Reading the docs > Solving life problems.",
     "Refactor your expectations.",
     "Is this deployed to prod or just localhost?",
+    "It works on my machine... but not in your life.",
   ],
   trader: [
     "Leverage 100x on verify failure.",
@@ -91,6 +131,7 @@ const ROASTS = {
     "Shorting your success rate.",
     "Buy high, sell your dreams low.",
     "This is financial advice: Don't.",
+    "HODLing onto false hope.",
   ],
   student: [
     "GPA is temporary, burnout is forever.",
@@ -98,6 +139,16 @@ const ROASTS = {
     "Academic weapon? More like academic victim.",
     "Study break is over. Get back to work.",
     "The mitochondria is the powerhouse of your stress.",
+  ],
+  influencer: [
+    "Don't forget to like, comment, and subscribe to reality.",
+    "Your engagement rate is lower than your bank account.",
+    "Content creator? Create some stability first.",
+  ],
+  gamer: [
+    "Touch grass. Just once. Please.",
+    "Lag isn't the reason you're failing.",
+    "GG well played, but not in real life.",
   ]
 }
 
@@ -155,11 +206,22 @@ function App() {
       clearInterval(msgInterval)
       setLoading(false)
 
-      // REALITY ENGINE 2.0
+      // REALITY ENGINE 3.0
       const text = input.toLowerCase()
       let baseScore = 50
       let multiplier = 1.0
       let matchCount = 0
+
+      // NEW: Direct Hit Check (Prioritized Specificity)
+      let directHitRoasts = []
+      let directHitKeyword = ''
+
+      Object.keys(DIRECT_HITS).forEach(key => {
+        if (text.includes(key)) {
+          directHitRoasts = [...directHitRoasts, ...DIRECT_HITS[key]]
+          directHitKeyword = key
+        }
+      })
 
       // 1. Keyword Analysis with Negation Handling
       const words = text.split(/\s+/)
@@ -203,29 +265,53 @@ function App() {
       let category = 'optimistic'
       let roastPool = ROASTS.optimistic
 
-      if (finalScore >= 80) {
-        category = 'achievable'
-        roastPool = ROASTS.achievable
-      } else if (finalScore <= 35) {
-        category = 'delusional'
-        roastPool = ROASTS.delusional
+      // Override for Direct Hits: If we found a specific trigger, rely on it
+      if (directHitRoasts.length > 0) {
+        // Boost confidence for direct hits
+        matchCount += 3
+
+        // Still categorize relative to score, but FORCE the roast to be specific
+        roastPool = directHitRoasts
+
+        // Subtle category nudge based on the "vibe" of specific topics
+        if (directHitKeyword === 'startup' || directHitKeyword === 'crypto') {
+          // These are usually delusional
+          if (finalScore > 40) finalScore -= 20;
+        }
       }
 
-      // Context-Aware Roasts
-      if (text.includes('code') || text.includes('app') || text.includes('api') || text.includes('rust')) {
-        roastPool = [...roastPool, ...ROASTS.developer]
-      } else if (text.includes('crypto') || text.includes('stock') || text.includes('trade') || text.includes('money')) {
-        roastPool = [...roastPool, ...ROASTS.trader]
-      } else if (text.includes('study') || text.includes('exam') || text.includes('gpa') || text.includes('school')) {
-        roastPool = [...roastPool, ...ROASTS.student]
+      // Standard Categorization (if no direct hit override or just purely score based)
+      if (finalScore >= 80) {
+        category = 'achievable'
+        if (directHitRoasts.length === 0) roastPool = ROASTS.achievable
+      } else if (finalScore <= 35) {
+        category = 'delusional'
+        if (directHitRoasts.length === 0) roastPool = ROASTS.delusional
+      }
+
+      // Context-Aware Roasts (Fallback if no Direct Hit)
+      if (directHitRoasts.length === 0) {
+        if (text.includes('code') || text.includes('app') || text.includes('api') || text.includes('rust') || text.includes('dev')) {
+          roastPool = [...roastPool, ...ROASTS.developer]
+        } else if (text.includes('crypto') || text.includes('stock') || text.includes('trade') || text.includes('money') || text.includes('btc')) {
+          roastPool = [...roastPool, ...ROASTS.trader]
+        } else if (text.includes('study') || text.includes('exam') || text.includes('gpa') || text.includes('school') || text.includes('uni')) {
+          roastPool = [...roastPool, ...ROASTS.student]
+        } else if (text.includes('viral') || text.includes('tiktok') || text.includes('follower') || text.includes('sub') || text.includes('content')) {
+          roastPool = [...roastPool, ...ROASTS.influencer]
+        } else if (text.includes('stream') || text.includes('twitch') || text.includes('rank') || text.includes('game') || text.includes('play')) {
+          roastPool = [...roastPool, ...ROASTS.gamer]
+        }
       }
 
       // Safely get roast
       if (!roastPool || roastPool.length === 0) roastPool = ROASTS.optimistic
       const roast = roastPool[Math.floor(Math.random() * roastPool.length)]
 
-      // 5. Confidence Score (Simple Heuristic for now)
-      const confidence = Math.min(matchCount * 15 + (text.length > 20 ? 10 : 0), 99)
+      // 5. Confidence Score (Simple Heuristic)
+      // Direct hits boost confidence significantly (90%+)
+      let confidence = Math.min(matchCount * 15 + (text.length > 20 ? 10 : 0), 99)
+      if (directHitRoasts.length > 0) confidence = Math.max(confidence, 92 + Math.floor(Math.random() * 7));
 
       if (isMatrix) {
         // Matrix Theme Overrides
