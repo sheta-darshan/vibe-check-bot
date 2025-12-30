@@ -66,7 +66,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                 </div>
 
                 <div className="mt-6 p-4 text-center">
-                    <p className={`text-2xl font-bold leading-tight ${result.category === 'delusional' ? 'glitch-text text-white' : 'text-gray-100'}`} data-text={result.roast}>
+                    <p className={`text-2xl font-bold leading-tight ${result.category === 'delusional' ? 'text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]' : 'text-gray-100'}`}>
                         "{result.roast}"
                     </p>
                 </div>

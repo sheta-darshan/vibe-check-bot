@@ -276,15 +276,6 @@ function App() {
       useCORS: true,
       logging: false, // Cleaner logs
       onclone: (clonedDoc) => {
-        // Fix for Glitch Text: Apply STATIC glitch effect (Shadows) instead of animation
-        // This ensures it looks "glitched" in the image but renders cleanly
-        const glitchElement = clonedDoc.querySelector('.glitch-text');
-        if (glitchElement) {
-          glitchElement.classList.remove('glitch-text'); // Remove animation class
-          glitchElement.style.color = '#ffffff';
-          glitchElement.style.textShadow = '2px 0 #ff00ff, -2px 0 #00ffff'; // Static chromatic aberration
-        }
-
         // Ensure Input Text is highly visible
         const italicText = clonedDoc.querySelector('.italic');
         if (italicText) {
