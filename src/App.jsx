@@ -60,7 +60,7 @@ const ROASTS = {
   optimistic: [
     "I love the energy, but let's see how long it lasts.",
     "Gym every day? Who are you, The Rock?",
-    "Ambition is cute. Good luck with February.",
+    "Ambitious. Good luck.",
     "This smells like a 'New Year, New Me' Instagram post.",
     "You're gonna need more caffeine for this one.",
     "A bit stretch, but not entirely impossible. Maybe.",
@@ -276,12 +276,13 @@ function App() {
       useCORS: true,
       logging: false, // Cleaner logs
       onclone: (clonedDoc) => {
-        // Fix for Glitch Text: Remove the class to prevent overlapping/distorted text
+        // Fix for Glitch Text: Apply STATIC glitch effect (Shadows) instead of animation
+        // This ensures it looks "glitched" in the image but renders cleanly
         const glitchElement = clonedDoc.querySelector('.glitch-text');
         if (glitchElement) {
-          glitchElement.classList.remove('glitch-text');
-          glitchElement.style.textShadow = 'none';
+          glitchElement.classList.remove('glitch-text'); // Remove animation class
           glitchElement.style.color = '#ffffff';
+          glitchElement.style.textShadow = '2px 0 #ff00ff, -2px 0 #00ffff'; // Static chromatic aberration
         }
 
         // Ensure Input Text is highly visible
