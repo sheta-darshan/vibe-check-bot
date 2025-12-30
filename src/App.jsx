@@ -184,57 +184,94 @@ function App() {
     setLoading(false)
   }
 
+  // Reusable helper for generating the image canvas
+  const generateResultCanvas = async () => {
+    if (!resultCardRef.current) return null;
+
+    return await html2canvas(resultCardRef.current, {
+      backgroundColor: '#1a0b2e',
+      scale: 3,
+      useCORS: true,
+      logging: false, // Cleaner logs
+      onclone: (clonedDoc) => {
+        // Fix for Glitch Text: Remove the class to prevent overlapping/distorted text
+        const glitchElement = clonedDoc.querySelector('.glitch-text');
+        if (glitchElement) {
+          glitchElement.classList.remove('glitch-text');
+          glitchElement.style.textShadow = 'none';
+          glitchElement.style.color = '#ffffff';
+        }
+
+        // Ensure Input Text is highly visible
+        const italicText = clonedDoc.querySelector('.italic');
+        if (italicText) {
+          italicText.style.color = '#fff';
+          italicText.style.textShadow = '0 2px 10px rgba(0,0,0,0.5)';
+        }
+      }
+    });
+  };
+
   const downloadCard = async () => {
     playClick()
-    if (!resultCardRef.current) {
-      console.error("Result card ref is null")
-      return
-    }
-
     try {
-      console.log("Starting capture...")
-      const canvas = await html2canvas(resultCardRef.current, {
-        backgroundColor: '#1a0b2e',
-        scale: 3,
-        useCORS: true,
-        logging: true,
-        onclone: (clonedDoc) => {
-          // Fix for Glitch Text: Remove the class to prevent overlapping/distorted text in screenshot
-          const glitchElement = clonedDoc.querySelector('.glitch-text');
-          if (glitchElement) {
-            glitchElement.classList.remove('glitch-text');
-            glitchElement.style.textShadow = 'none'; // Ensure clean look
-            glitchElement.style.color = '#ffffff';
-          }
-
-          // Ensure Input Text is highly visible
-          const italicText = clonedDoc.querySelector('.italic');
-          if (italicText) {
-            italicText.style.color = '#fff';
-            italicText.style.textShadow = '0 2px 10px rgba(0,0,0,0.5)';
-          }
-        }
-      })
+      console.log("Starting download capture...")
+      const canvas = await generateResultCanvas();
+      if (!canvas) return;
 
       const dataUrl = canvas.toDataURL('image/png')
-      console.log("Canvas captured, data URL length:", dataUrl.length)
-
-      if (dataUrl === 'data:,') {
-        throw new Error("Empty data URL generated")
-      }
-
       const link = document.createElement('a')
       link.download = `vibe-check-result-${Date.now()}.png`
       link.href = dataUrl
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      console.log("Download triggered successfully")
-
     } catch (err) {
-      console.error("Failed to generate image:", err)
-      alert("Oops! Could not generate the image. Check console for details.")
+      console.error("Download failed:", err)
+      alert("Oops! Could not save the image.")
     }
+  }
+
+  const shareResult = async () => {
+    playClick();
+    try {
+      console.log("Starting share capture...");
+      const canvas = await generateResultCanvas();
+      if (!canvas) return;
+
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], 'vibe-check-result.png', { type: 'image/png' });
+        const shareData = {
+          files: [file],
+          title: '2026 Resolution Reality Check',
+          text: `My 2026 Reality Check: ${result.category.toUpperCase()}! 🤖 Reality Score: ${result.score}% Result: "${result.roast}" Check your 2026 vibe here: https://sheta-darshan.github.io/vibe-check-bot/`,
+          url: 'https://sheta-darshan.github.io/vibe-check-bot/'
+        };
+
+        if (navigator.share && navigator.canShare(shareData)) {
+          await navigator.share(shareData);
+        } else {
+          // Fallback: Copy Image or Text to Clipboard
+          try {
+            // Try copying image to clipboard if supported (Desktop)
+            const item = updateClipboardItem(blob);
+            await navigator.clipboard.write([item]);
+            alert("Image copied to clipboard! Paste it anywhere to share.");
+          } catch (clipboardErr) {
+            // Ultimate fallback: Copy text only
+            await navigator.clipboard.writeText(shareData.text);
+            alert("Result text copied to clipboard! (Image sharing not supported on this device)");
+          }
+        }
+      }, 'image/png');
+    } catch (err) {
+      console.error("Share failed:", err);
+    }
+  };
+
+  // Helper for clipboard image copy
+  const updateClipboardItem = (blob) => {
+    return new ClipboardItem({ [blob.type]: blob });
   }
 
   return (
@@ -327,6 +364,7 @@ function App() {
               resultCardRef={resultCardRef}
               reset={reset}
               downloadCard={downloadCard}
+              shareResult={shareResult}
               playHover={playHover}
             />
           )}

@@ -2,32 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Skull, AlertTriangle, Sparkles, RefreshCw, Download, ShieldCheck, Share2 } from 'lucide-react';
 
-const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, playHover }) => {
+const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareResult, playHover }) => {
     // Generate timestamp once on render
     const timestamp = new Date().toLocaleDateString('en-US', {
         day: 'numeric',
         month: 'short',
         year: 'numeric'
     });
-
-    const handleShare = async () => {
-        const shareData = {
-            title: '2026 Vibe Check',
-            text: `My 2026 Reality Score: ${result.score}% (${result.category.toUpperCase()}). Result: "${result.roast}" 🤖 #VibeCheck2026`,
-            url: window.location.href
-        };
-
-        try {
-            if (navigator.share) {
-                await navigator.share(shareData);
-            } else {
-                await navigator.clipboard.writeText(shareData.text + " " + shareData.url);
-                alert('Result copied to clipboard! 📋');
-            }
-        } catch (err) {
-            console.error('Share failed:', err);
-        }
-    };
 
     return (
         <motion.div
@@ -125,7 +106,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, playHov
                 {/* Secondary Actions: Share & Download */}
                 <div className="grid grid-cols-2 gap-3">
                     <button
-                        onClick={handleShare}
+                        onClick={shareResult}
                         onMouseEnter={playHover}
                         aria-label="Share Result"
                         className="py-3 px-4 rounded-lg bg-neon-purple/10 hover:bg-neon-purple/20 text-neon-pink border border-neon-pink/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(255,0,255,0.2)]"
