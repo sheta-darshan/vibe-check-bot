@@ -32,7 +32,9 @@ const ParticleBackground = ({ isMatrix }) => {
 
         const initParticles = () => {
             particles = []
-            const numberOfParticles = (canvas.width * canvas.height) / 9000
+            // Responsive density: Lower density (higher divisor) for mobile
+            const density = window.innerWidth < 768 ? 15000 : 9000
+            const numberOfParticles = (canvas.width * canvas.height) / density
             for (let i = 0; i < numberOfParticles; i++) {
                 let size = (Math.random() * 2) + 1
                 let x = (Math.random() * ((window.innerWidth - size * 2) - (size * 2)) + size * 2)
