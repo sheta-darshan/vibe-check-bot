@@ -56,6 +56,17 @@ describe('Reality Engine 3.0', () => {
         expect(result.forecast).toMatch(/Outlook:/i)
     })
 
+    it('should trigger Ex-specific roast for "Text my ex"', () => {
+        const result = analyzeResolutionLogic("Text my ex")
+        const exRoasts = [
+            "They blocked you for a reason.",
+            "Texting them is a violation of the Geneva Convention.",
+            "Closure is a myth. Move on."
+        ]
+        expect(exRoasts).toContain(result.roast)
+        expect(result.category).toBe('optimistic') // Standard category, but custom roast
+    })
+
     // 4. Matrix Mode
     it('should force extremas in Matrix mode', () => {
         // Normal input that results in delusional

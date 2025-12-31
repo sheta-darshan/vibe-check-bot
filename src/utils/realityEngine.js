@@ -132,7 +132,6 @@ const ROASTS = {
     ],
     optimistic: [
         "I love the energy, but let's see how long it lasts.",
-        "Gym every day? Who are you, The Rock?",
         "Ambitious. Good luck.",
         "This smells like a 'New Year, New Me' Instagram post.",
         "A bit stretch, but not entirely impossible. Maybe.",
@@ -194,7 +193,8 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
     let directHitKeyword = ''
 
     Object.keys(DIRECT_HITS).forEach(key => {
-        if (text.includes(key)) {
+        const regex = new RegExp(`\\b${key}\\b`, 'i');
+        if (regex.test(text)) {
             directHitRoasts = [...directHitRoasts, ...DIRECT_HITS[key]]
             directHitKeyword = key
         }
