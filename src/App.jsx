@@ -238,11 +238,11 @@ function App() {
               className="space-y-6"
             >
               <div>
-                <label className="block text-neon-blue text-xs font-bold mb-2 ml-1 tracking-widest">INPUT DATA STREAM</label>
+                <label className="block text-neon-blue text-xs font-bold mb-2 ml-1 tracking-widest">SUBMIT YOUR DELUSION</label>
                 <textarea
                   ref={inputRef}
                   className="w-full bg-black/40 border border-neon-purple/30 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-pink/50 focus:border-transparent transition-all min-h-[120px] resize-none text-base md:text-lg shadow-inner font-mono backdrop-blur-sm"
-                  placeholder="e.g., Become a billionaire, Gym everyday, finally learn Rust..."
+                  placeholder='e.g., "Become a billionaire" (lol), "Wake up at 5AM", "Quit sugar"...'
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onMouseEnter={playHover}
@@ -271,7 +271,7 @@ function App() {
               >
                 <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 <Zap className="w-5 h-5 group-hover:fill-current animate-pulse" />
-                ANALYZE REALITY
+                AUDIT MY LIFE
               </button>
             </motion.div>
           )}
@@ -311,7 +311,7 @@ function App() {
             onClick={clearHistory}
             className="absolute right-0 top-10 z-30 text-[10px] text-gray-500 hover:text-red-400 font-mono underline cursor-pointer"
           >
-            CLEAR DATA
+            SHRED EVIDENCE
           </button>
         )}
         <HistoryTape history={history} />
@@ -319,7 +319,7 @@ function App() {
 
       {/* Footer */}
       <div className="fixed bottom-4 text-center w-full text-[10px] text-gray-600 font-mono uppercase tracking-widest opacity-50 hover:opacity-100 transition-opacity pointer-events-none">
-        © 2026 Darshankumar Sheta • NO REFUNDS ON DREAMS
+        © 2026 Darshankumar Sheta • METAPHYSICAL REFUNDS DENIED
       </div>
     </div>
   )

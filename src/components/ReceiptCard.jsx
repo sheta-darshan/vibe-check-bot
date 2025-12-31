@@ -60,13 +60,13 @@ const ReceiptCard = ({ result, input, timestamp }) => {
                     <span>${total}</span>
                 </div>
                 <div className="text-center text-xs mt-1 uppercase">
-                    (Paid with Dignity)
+                    (Paid with Ego)
                 </div>
             </div>
 
             {/* Footer */}
             <div className="text-center space-y-2">
-                <p className="text-[10px] uppercase">Thank you for validating your existence.</p>
+                <p className="text-[10px] uppercase">Thank you for wasting our time.</p>
                 <p className="text-[10px] uppercase font-bold">NO REFUNDS.</p>
 
                 {/* CSS Barcode */}

@@ -27,7 +27,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                     className="flex items-center gap-2 text-xs font-mono text-neon-blue hover:text-white transition-colors uppercase tracking-widest bg-black/50 px-3 py-1 rounded-full border border-neon-blue/30"
                 >
                     <ScrollText className="w-4 h-4" />
-                    {showReceipt ? "View Hologram" : "View Receipt"}
+                    {showReceipt ? "View Hologram" : "View Paper Trail"}
                 </button>
             </div>
 
@@ -50,7 +50,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
 
                             {/* Display User Resolution */}
                             <div className="mb-4 pb-4 border-b border-white/5">
-                                <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Subject Resolution</p>
+                                <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">DEFENDANT'S CLAIM</p>
                                 <p className="text-lg text-white font-medium italic">"{input}"</p>
                             </div>
 
@@ -124,7 +124,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                     aria-label="Try Again"
                     className="w-full py-3 px-4 rounded-lg bg-gray-800 hover:bg-gray-700 text-white font-medium flex items-center justify-center gap-2 transition-all shadow-lg border border-white/5"
                 >
-                    <RefreshCw className="w-4 h-4" /> Try Another Resolution
+                    <RefreshCw className="w-4 h-4" /> MAKE ANOTHER MISTAKE
                 </button>
 
                 {/* Secondary Actions: Share & Download */}
@@ -135,7 +135,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                         aria-label="Share Result"
                         className="py-3 px-4 rounded-lg bg-neon-purple/10 hover:bg-neon-purple/20 text-neon-pink border border-neon-pink/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(255,0,255,0.2)]"
                     >
-                        <Share2 className="w-4 h-4" /> Share
+                        <Share2 className="w-4 h-4" /> EXPOSE MYSELF
                     </button>
                     <button
                         onClick={downloadCard}
@@ -143,7 +143,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                         aria-label="Save Proof"
                         className="py-3 px-4 rounded-lg bg-neon-blue/10 hover:bg-neon-blue/20 text-neon-blue border border-neon-blue/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.2)]"
                     >
-                        <Download className="w-4 h-4" /> {showReceipt ? "Save Receipt" : "Save Proof"}
+                        <Download className="w-4 h-4" /> {showReceipt ? "SAVE RECEIPT" : "SAVE EVIDENCE"}
                     </button>
                 </div>
             </div>
