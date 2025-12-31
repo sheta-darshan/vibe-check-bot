@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Skull, AlertTriangle, Sparkles, RefreshCw, Download, ShieldCheck, Share2, ScrollText } from 'lucide-react';
 import ReceiptCard from './ReceiptCard';
 
-const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareResult, playHover }) => {
+const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareResult, isSharing, playHover }) => {
     // Generate timestamp once on render
     const timestamp = new Date().toLocaleDateString('en-US', {
         day: 'numeric',
@@ -133,9 +133,11 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                         onClick={shareResult}
                         onMouseEnter={playHover}
                         aria-label="Share Result"
-                        className="py-3 px-4 rounded-lg bg-neon-purple/10 hover:bg-neon-purple/20 text-neon-pink border border-neon-pink/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(255,0,255,0.2)]"
+                        disabled={isSharing}
+                        className="py-3 px-4 rounded-lg bg-neon-purple/10 hover:bg-neon-purple/20 text-neon-pink border border-neon-pink/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(255,0,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <Share2 className="w-4 h-4" /> EXPOSE MYSELF
+                        <Share2 className={`w-4 h-4 ${isSharing ? 'animate-pulse' : ''}`} />
+                        {isSharing ? 'GENERATING EVIDENCE...' : 'EXPOSE MYSELF'}
                     </button>
                     <button
                         onClick={downloadCard}

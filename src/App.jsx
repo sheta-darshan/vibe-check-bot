@@ -33,10 +33,7 @@ const TRENDING_PRESETS = [
 ]
 
 function App() {
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0])
-  const [result, setResult] = useState(null)
+  const [isSharing, setIsSharing] = useState(false)
 
   // Initialize history from localStorage
   const [history, setHistory] = useState(() => {
@@ -167,37 +164,66 @@ function App() {
 
   const shareResult = async () => {
     playClick();
+    if (isSharing) return;
+    setIsSharing(true);
+
     try {
       console.log("Starting share capture...");
+      // Small delay to allow UI to update to "Generating" state
+      await new Promise(resolve => setTimeout(resolve, 50));
+
       const canvas = await generateResultCanvas();
-      if (!canvas) return;
+      if (!canvas) throw new Error("Canvas generation failed");
 
       canvas.toBlob(async (blob) => {
+        if (!blob) {
+          setIsSharing(false);
+          return;
+        }
+
         const file = new File([blob], 'vibe-check-result.png', { type: 'image/png' });
         const shareData = {
           title: '2026 Vibe Auditor',
-          text: `My 2026 Reality Audit: ${result.category.toUpperCase()}! 📋 Reality Score: ${result.score}% Audit: "${result.roast}" #VibeAuditor #Delulu #2026Goals #RoastedByAI https://sheta-darshan.github.io/vibe-check-bot/`,
-          url: 'https://sheta-darshan.github.io/vibe-check-bot/'
+          text: `My 2026 Reality Audit: ${result.category.toUpperCase()}! 📋 Reality Score: ${result.score}% Audit: "${result.roast}" #VibeAuditor #Delulu #2026Goals #RoastedByAI https://sheta-darshan.github.io/vibe-check-bot/`
         };
 
-        if (navigator.share && navigator.canShare(shareData)) {
-          await navigator.share(shareData);
-        } else {
-          // Fallback: Copy Image or Text to Clipboard
+        // Try native share
+        if (navigator.share && navigator.canShare({ files: [file], ...shareData })) {
           try {
-            // Try copying image to clipboard if supported (Desktop)
-            const item = updateClipboardItem(blob);
-            await navigator.clipboard.write([item]);
-            alert("Image copied to clipboard! Paste it anywhere to share.");
-          } catch (clipboardErr) {
-            // Ultimate fallback: Copy text only
-            await navigator.clipboard.writeText(shareData.text);
-            alert("Result text copied to clipboard! (Image sharing not supported on this device)");
+            await navigator.share({
+              files: [file],
+              ...shareData
+            });
+          } catch (shareErr) {
+            if (shareErr.name !== 'AbortError') {
+              console.error("Native share failed:", shareErr);
+              await fallbackShare(blob, shareData);
+            }
           }
+        } else {
+          await fallbackShare(blob, shareData);
         }
+        setIsSharing(false);
       }, 'image/png');
     } catch (err) {
       console.error("Share failed:", err);
+      setIsSharing(false);
+      alert("Could not generate image. Try downloading underneath.");
+    }
+  };
+
+  // Separated fallback logic
+  const fallbackShare = async (blob, shareData) => {
+    // Fallback: Copy Image or Text to Clipboard
+    try {
+      // Try copying image to clipboard if supported (Desktop)
+      const item = updateClipboardItem(blob);
+      await navigator.clipboard.write([item]);
+      alert("Image copied to clipboard! Paste it anywhere to share.");
+    } catch (clipboardErr) {
+      // Ultimate fallback: Copy text only
+      await navigator.clipboard.writeText(shareData.text);
+      alert("Result text copied to clipboard! (Image sharing not supported on this device)");
     }
   };
 
@@ -297,6 +323,7 @@ function App() {
               reset={reset}
               downloadCard={downloadCard}
               shareResult={shareResult}
+              isSharing={isSharing}
               playHover={playHover}
             />
           )}
