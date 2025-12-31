@@ -101,9 +101,9 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
 
                         <div className="mt-8 pt-4 border-t border-white/10 flex justify-between items-end">
                             <div className="text-left">
-                                <div className="text-[10px] text-gray-500 font-mono mb-1">resolution_hash_#2026</div>
+                                <div className="text-[10px] text-gray-500 font-mono mb-1">audit_hash_#2026</div>
                                 <div className="text-xs text-neon-blue font-bold tracking-widest">
-                                    VIBE-CHECK-BOT • {result.confidence}% CONFIDENCE
+                                    VIBE AUDITOR • {result.confidence}% CONFIDENCE
                                 </div>
                             </div>
                             <div className="text-right">

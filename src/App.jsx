@@ -176,8 +176,8 @@ function App() {
         const file = new File([blob], 'vibe-check-result.png', { type: 'image/png' });
         const shareData = {
           files: [file],
-          title: '2026 Resolution Reality Check',
-          text: `My 2026 Reality Check: ${result.category.toUpperCase()}! 🤖 Reality Score: ${result.score}% Result: "${result.roast}" Check your 2026 vibe here: https://sheta-darshan.github.io/vibe-check-bot/`,
+          title: '2026 Vibe Auditor',
+          text: `My 2026 Reality Audit: ${result.category.toUpperCase()}! 📋 Reality Score: ${result.score}% Audit: "${result.roast}" Get your audit here: https://sheta-darshan.github.io/vibe-check-bot/`,
           url: 'https://sheta-darshan.github.io/vibe-check-bot/'
         };
 

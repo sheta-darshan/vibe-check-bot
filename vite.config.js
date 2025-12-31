@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: '2026 Vibe Check',
-        short_name: 'Vibe Check',
-        description: 'Is your New Year resolution delusional? Find out.',
+        name: 'Vibe Auditor 2026',
+        short_name: 'Vibe Auditor',
+        description: 'Is your New Year resolution delusional? Get an audit.',
         theme_color: '#1a0b2e',
         background_color: '#1a0b2e',
         display: 'standalone',

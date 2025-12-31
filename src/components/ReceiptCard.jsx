@@ -17,7 +17,7 @@ const ReceiptCard = ({ result, input, timestamp }) => {
         >
             {/* Header */}
             <div className="text-center border-b-2 border-dashed border-black pb-4 mb-4">
-                <h2 className="text-2xl font-black tracking-tighter">REALITY CORP.</h2>
+                <h2 className="text-2xl font-black tracking-tighter">VIBE AUDIT INC.</h2>
                 <p className="text-xs uppercase">Store #2026 • Term: Q1</p>
                 <p className="text-xs">{timestamp}</p>
             </div>
