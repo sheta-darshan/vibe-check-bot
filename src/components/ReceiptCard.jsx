@@ -41,7 +41,13 @@ const ReceiptCard = ({ result, input, timestamp }) => {
                     <span>${serviceFee.toFixed(2)}</span>
                 </div>
 
-                <div className="flex justify-between text-xs text-gray-500 italic pt-1">
+                {result.forecast && (
+                    <div className="text-xs text-black/70 italic pt-2 border-t border-dashed border-black/20 mt-2">
+                        "{result.forecast}"
+                    </div>
+                )}
+
+                <div className="flex justify-between text-xs text-gray-500 italic pt-1 mt-2">
                     <span>STATUS</span>
                     <span className="uppercase">{result.category}</span>
                 </div>

@@ -25,6 +25,47 @@ const INTENSITY_MULTIPLIERS = {
     '100%': 0.6
 }
 
+const FORECASTS = {
+    achievable: [
+        "Outlook: Sunny with a chance of actual success.",
+        "Outlook: Boring but stable. Invest in mutual funds.",
+        "Outlook: Surprisingly high probability of survival.",
+        "Outlook: Signs point to yes, but don't get cocky.",
+    ],
+    delusional: [
+        "Outlook: Apocalyptic. Seek shelter immediately.",
+        "Outlook: 404 Reality Not Found. Please reboot your brain.",
+        "Outlook: You have a better chance of fighting a bear.",
+        "Outlook: Failure imminent. Prepare snacks.",
+    ],
+    optimistic: [
+        "Outlook: Hazy. Ask again after your morning coffee.",
+        "Outlook: 50/50. Flip a coin or call your therapist.",
+        "Outlook: Requires effort. Proceed with caution.",
+    ],
+    crypto: [
+        "Outlook: High volatility. HODL your tears.",
+        "Outlook: Rug pull likely. Don't check your wallet.",
+        "Outlook: To the moon? More like to the doom.",
+    ],
+    love: [
+        "Outlook: Ghosting likely. Prepare ice cream.",
+        "Outlook: You will die alone, but with cats.",
+        "Outlook: Their red flags are not a carnival attraction.",
+        "Outlook: Texting them back is a strategic error.",
+    ],
+    career: [
+        "Outlook: HR is already writing the email.",
+        "Outlook: Burnout is just excitement leaving the body.",
+        "Outlook: Sunday Scaries will reach critical mass.",
+    ],
+    diet: [
+        "Outlook: Cheat day is coming. It's today.",
+        "Outlook: Kale tastes like sadness. Good luck.",
+        "Outlook: Pizza is calling. Do not answer.",
+    ]
+}
+
 const DIRECT_HITS = {
     'gym': [
         "We both know you're canceling that membership in Feb.",
@@ -47,20 +88,36 @@ const DIRECT_HITS = {
         "Please, no more POV videos.",
         "The algorithm hates you, and so do I.",
     ],
-    'read': [
-        "Buying books isn't reading them.",
-        "Audiobooks at 2x speed don't count.",
-        "Tsundoku level: Expert.",
+    // New Categories
+    'ex': [
+        "They blocked you for a reason.",
+        "Texting them is a violation of the Geneva Convention.",
+        "Closure is a myth. Move on.",
     ],
-    'write': [
-        "ChatGPT is writing it, aren't they?",
-        "The world doesn't need another memoir.",
-        "Writer's block? Or just laziness?",
+    'crush': [
+        "They don't know you exist.",
+        "Stop analyzing their Instagram stories.",
+        "Simping is not a tax write-off.",
     ],
-    'travel': [
-        "Running away to Bali won't fix your internal monologue.",
-        "Digital Nomad? More like Digital Homeless.",
-        "Your Instagram needs verify, your wallet needs help.",
+    'keto': [
+        "Enjoy your breath smelling like acetone.",
+        "Bread misses you too.",
+        "Is butter a carb?",
+    ],
+    'vegan': [
+        "We get it, you're vegan.",
+        "Plants have feelings too (probably not).",
+        "Where do you get your protein? (Just kidding, nobody cares).",
+    ],
+    'boss': [
+        "Asking for a raise? In this economy?",
+        "They are definitely not 'like a family'.",
+        "Work-life balance is a myth invented by HR.",
+    ],
+    'save': [
+        "Stop buying $8 coffees then.",
+        "Avocado toast is the root of all evil.",
+        "Your savings account is laughing at you.",
     ]
 }
 
@@ -72,61 +129,48 @@ const ROASTS = {
         "This is so doable I almost fell asleep reading it.",
         "2026 might actually be your year?",
         "Sensible. Functioning adult energy.",
-        "Mom would be proud. I'm bored, but proud.",
     ],
     optimistic: [
         "I love the energy, but let's see how long it lasts.",
         "Gym every day? Who are you, The Rock?",
         "Ambitious. Good luck.",
         "This smells like a 'New Year, New Me' Instagram post.",
-        "You're gonna need more caffeine for this one.",
         "A bit stretch, but not entirely impossible. Maybe.",
-        "Main Character energy, but do you have the plot armor?",
     ],
     delusional: [
         "Billionaire by Feb? Okay, settle down Elon.",
         "I admire the sheer lack of connection to reality.",
         "This resolution has higher inflation than the economy.",
         "Did you hit your head, or is this a cry for help?",
-        "Start by naming variables something other than 'x' first.",
-        "Fixing sleep schedule? In this economy? LMAO.",
         "Pure sci-fi. I love it.",
         "Sir, this is a Wendy's.",
-        "Have you considered therapy instead?",
     ],
     developer: [
         "Git push --force your life?",
         "You can't sudo make me believe that.",
         "404: Willpower not found.",
-        "Reading the docs > Solving life problems.",
-        "Refactor your expectations.",
-        "Is this deployed to prod or just localhost?",
         "It works on my machine... but not in your life.",
     ],
     trader: [
         "Leverage 100x on verify failure.",
         "Liquidation price hit immediately.",
-        "Shorting your success rate.",
         "Buy high, sell your dreams low.",
-        "This is financial advice: Don't.",
-        "HODLing onto false hope.",
     ],
-    student: [
-        "GPA is temporary, burnout is forever.",
-        "Fixing sleep schedule? In this economy?",
-        "Academic weapon? More like academic victim.",
-        "Study break is over. Get back to work.",
-        "The mitochondria is the powerhouse of your stress.",
+    // New Categories
+    love: [
+        "Love is in the air? No, that's just pollution.",
+        "Tinder is not a hobby.",
+        "Your soulmate is currently avoiding you.",
     ],
-    influencer: [
-        "Don't forget to like, comment, and subscribe to reality.",
-        "Your engagement rate is lower than your bank account.",
-        "Content creator? Create some stability first.",
+    career: [
+        "Quiet quitting is just doing your job.",
+        "LinkedIn is not real life.",
+        "Rise and grind? More like rise and cry.",
     ],
-    gamer: [
-        "Touch grass. Just once. Please.",
-        "Lag isn't the reason you're failing.",
-        "GG well played, but not in real life.",
+    diet: [
+        "Calories don't count on weekends (false).",
+        "Your metabolism is slowing down as we speak.",
+        "Eating greens won't fix your red flags.",
     ]
 }
 
@@ -145,7 +189,7 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
     let multiplier = 1.0
     let matchCount = 0
 
-    // NEW: Direct Hit Check (Prioritized Specificity)
+    // Direct Hit Check
     let directHitRoasts = []
     let directHitKeyword = ''
 
@@ -156,34 +200,24 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
         }
     })
 
-    // 1. Keyword Analysis with Negation Handling
+    // 1. Keyword Analysis & Negation
     const words = text.split(/\s+/)
     const negationWords = ['not', "won't", "don't", 'stop', 'quit', 'no', 'never']
-
-    // Heuristic Scoring
     Object.keys(REALITY_WEIGHTS).forEach(key => {
-        // Robust Matching: Use Regex with Word Boundaries
-        // Escaping special characters if any (though unlikely in our key set)
         const regex = new RegExp(`\\b${key}\\b`, 'i');
-
         if (regex.test(text)) {
-            // Check for local negation
             const negIndex = words.findIndex(w => negationWords.includes(w))
             const keyIndex = text.indexOf(key)
-
             let weight = REALITY_WEIGHTS[key]
-
-            // Smart Negation: If "not" appears ~15 chars before the keyword, FLIP the weight
             if (negIndex !== -1 && keyIndex > -1 && MatchIsNegated(text, key, negationWords)) {
-                weight = -weight * 0.5; // Flip it and reduce impact slightly
+                weight = -weight * 0.5;
             }
-
             baseScore += weight
             matchCount++
         }
     })
 
-    // 2. Intensity Multipliers
+    // 2. Intensity
     Object.keys(INTENSITY_MULTIPLIERS).forEach(key => {
         const regex = new RegExp(`\\b${key}\\b`, 'i');
         if (regex.test(text)) {
@@ -197,21 +231,18 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
     finalScore = Math.min(Math.max(finalScore, 5), 100)
     finalScore = Math.round(finalScore)
 
-    // 4. Categorization & Roast Selection
+    // 4. Categorization & Roast
     let category = 'optimistic'
     let roastPool = ROASTS.optimistic
 
-    // Override for Direct Hits: If we found a specific trigger, rely on it
     if (directHitRoasts.length > 0) {
         matchCount += 3
         roastPool = directHitRoasts
-
         if (directHitKeyword === 'startup' || directHitKeyword === 'crypto') {
             if (finalScore > 40) finalScore -= 20;
         }
     }
 
-    // Standard Categorization
     if (finalScore >= 80) {
         category = 'achievable'
         if (directHitRoasts.length === 0) roastPool = ROASTS.achievable
@@ -220,26 +251,35 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
         if (directHitRoasts.length === 0) roastPool = ROASTS.delusional
     }
 
-    // Context-Aware Roasts (Fallback)
+    // Context-Aware Roasts & Forecasts
+    let contextCategory = '';
+
     if (directHitRoasts.length === 0) {
-        if (text.includes('code') || text.includes('app') || text.includes('api') || text.includes('rust') || text.includes('dev')) {
-            roastPool = [...roastPool, ...ROASTS.developer]
-        } else if (text.includes('crypto') || text.includes('stock') || text.includes('trade') || text.includes('money') || text.includes('btc')) {
-            roastPool = [...roastPool, ...ROASTS.trader]
-        } else if (text.includes('study') || text.includes('exam') || text.includes('gpa') || text.includes('school') || text.includes('uni')) {
-            roastPool = [...roastPool, ...ROASTS.student]
-        } else if (text.includes('viral') || text.includes('tiktok') || text.includes('follower') || text.includes('sub') || text.includes('content')) {
-            roastPool = [...roastPool, ...ROASTS.influencer]
-        } else if (text.includes('stream') || text.includes('twitch') || text.includes('rank') || text.includes('game') || text.includes('play')) {
-            roastPool = [...roastPool, ...ROASTS.gamer]
+        if (text.includes('code') || text.includes('app') || text.includes('api') || text.includes('dev')) {
+            roastPool = [...roastPool, ...ROASTS.developer]; contextCategory = 'career';
+        } else if (text.includes('crypto') || text.includes('stock') || text.includes('trade')) {
+            roastPool = [...roastPool, ...ROASTS.trader]; contextCategory = 'crypto';
+        } else if (text.includes('love') || text.includes('date') || text.includes('marry') || text.includes('crush') || text.includes('ex')) {
+            roastPool = [...roastPool, ...ROASTS.love]; contextCategory = 'love';
+        } else if (text.includes('job') || text.includes('work') || text.includes('boss') || text.includes('hustle')) {
+            roastPool = [...roastPool, ...ROASTS.career]; contextCategory = 'career';
+        } else if (text.includes('diet') || text.includes('eat') || text.includes('food') || text.includes('vegan') || text.includes('keto')) {
+            roastPool = [...roastPool, ...ROASTS.diet]; contextCategory = 'diet';
         }
     }
 
-    // Safely get roast
     if (!roastPool || roastPool.length === 0) roastPool = ROASTS.optimistic
     const roast = roastPool[Math.floor(Math.random() * roastPool.length)]
 
-    // 5. Confidence Score
+    // 5. Forecast Generation
+    let forecastPool = FORECASTS[category] || FORECASTS.optimistic; // Default to category
+    if (contextCategory && FORECASTS[contextCategory]) {
+        // Mix generic outlooks with specific ones
+        forecastPool = [...forecastPool, ...FORECASTS[contextCategory]];
+    }
+    const forecast = forecastPool[Math.floor(Math.random() * forecastPool.length)];
+
+    // 6. Confidence Score
     let confidence = Math.min(matchCount * 15 + (text.length > 20 ? 10 : 0), 99)
     if (directHitRoasts.length > 0) confidence = Math.max(confidence, 92 + Math.floor(Math.random() * 7));
 
@@ -248,5 +288,5 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
         if (category === 'achievable') finalScore = 99;
     }
 
-    return { category, score: finalScore, roast, confidence, input }
+    return { category, score: finalScore, roast, forecast, confidence, input }
 }

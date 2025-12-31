@@ -82,6 +82,15 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                                 <span className="font-bold text-white">REALITY SCORE: {result.score}%</span>
                                 <span>REALITY</span>
                             </p>
+
+                            {/* Vibe Forecast */}
+                            {result.forecast && (
+                                <div className="mt-4 pt-3 border-t border-white/5 mx-2">
+                                    <p className="text-[11px] text-neon-blue font-mono text-left tracking-tight animate-pulse">
+                                        {result.forecast}
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         <div className="mt-6 p-4 text-center">

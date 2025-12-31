@@ -48,6 +48,14 @@ describe('Reality Engine 3.0', () => {
         expect(result.category).toBe('delusional')
     })
 
+    it('should generate a Vibe Forecast', () => {
+        const result = analyzeResolutionLogic("I want to be a crypto billionaire")
+        expect(result.forecast).toBeDefined()
+        expect(typeof result.forecast).toBe('string')
+        // Crypto context should trigger crypto forecast
+        expect(result.forecast).toMatch(/Outlook:/i)
+    })
+
     // 4. Matrix Mode
     it('should force extremas in Matrix mode', () => {
         // Normal input that results in delusional
