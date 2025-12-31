@@ -99,53 +99,54 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                             </p>
                         </div>
 
-                        <div className="text-left">
-                            <div className="text-[10px] text-gray-500 font-mono mb-1">CASE FILE NO. 2026-{Math.floor(Math.random() * 9000) + 1000}</div>
-                            <div className="text-xs text-neon-blue font-bold tracking-widest">
-                                VIBE AUDITOR • {result.confidence}% CONFIDENCE
+                        <div className="mt-8 pt-4 border-t border-white/10 flex justify-between items-end">
+                            <div className="text-left">
+                                <div className="text-[10px] text-gray-500 font-mono mb-1">CASE FILE NO. 2026-{Math.floor(Math.random() * 9000) + 1000}</div>
+                                <div className="text-xs text-neon-blue font-bold tracking-widest">
+                                    VIBE AUDITOR • {result.confidence}% CONFIDENCE
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <div className="text-[10px] text-gray-500 font-mono">{timestamp}</div>
+                                {/* Removed Official Analysis Text */}
                             </div>
                         </div>
-                        <div className="text-right">
-                            <div className="text-[10px] text-gray-500 font-mono">{timestamp}</div>
-                            {/* Removed Official Analysis Text */}
-                        </div>
-                    </div>
-            </>
+                    </>
                 )}
-        </div>
+            </div>
 
-            {/* Actions: New Layout */ }
-    <div className="flex flex-col gap-3 max-w-md mx-auto">
-        {/* Primary Action: Try Again */}
-        <button
-            onClick={reset}
-            onMouseEnter={playHover}
-            aria-label="Try Again"
-            className="w-full py-3 px-4 rounded-lg bg-gray-800 hover:bg-gray-700 text-white font-medium flex items-center justify-center gap-2 transition-all shadow-lg border border-white/5"
-        >
-            <RefreshCw className="w-4 h-4" /> MAKE ANOTHER MISTAKE
-        </button>
+            {/* Actions: New Layout */}
+            <div className="flex flex-col gap-3 max-w-md mx-auto">
+                {/* Primary Action: Try Again */}
+                <button
+                    onClick={reset}
+                    onMouseEnter={playHover}
+                    aria-label="Try Again"
+                    className="w-full py-3 px-4 rounded-lg bg-gray-800 hover:bg-gray-700 text-white font-medium flex items-center justify-center gap-2 transition-all shadow-lg border border-white/5"
+                >
+                    <RefreshCw className="w-4 h-4" /> MAKE ANOTHER MISTAKE
+                </button>
 
-        {/* Secondary Actions: Share & Download */}
-        <div className="grid grid-cols-2 gap-3">
-            <button
-                onClick={shareResult}
-                onMouseEnter={playHover}
-                aria-label="Share Result"
-                className="py-3 px-4 rounded-lg bg-neon-purple/10 hover:bg-neon-purple/20 text-neon-pink border border-neon-pink/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(255,0,255,0.2)]"
-            >
-                <Share2 className="w-4 h-4" /> EXPOSE MYSELF
-            </button>
-            <button
-                onClick={downloadCard}
-                onMouseEnter={playHover}
-                aria-label="Save Proof"
-                className="py-3 px-4 rounded-lg bg-neon-blue/10 hover:bg-neon-blue/20 text-neon-blue border border-neon-blue/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.2)]"
-            >
-                <Download className="w-4 h-4" /> {showReceipt ? "SAVE RECEIPT" : "SAVE EVIDENCE"}
-            </button>
-        </div>
-    </div>
+                {/* Secondary Actions: Share & Download */}
+                <div className="grid grid-cols-2 gap-3">
+                    <button
+                        onClick={shareResult}
+                        onMouseEnter={playHover}
+                        aria-label="Share Result"
+                        className="py-3 px-4 rounded-lg bg-neon-purple/10 hover:bg-neon-purple/20 text-neon-pink border border-neon-pink/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(255,0,255,0.2)]"
+                    >
+                        <Share2 className="w-4 h-4" /> EXPOSE MYSELF
+                    </button>
+                    <button
+                        onClick={downloadCard}
+                        onMouseEnter={playHover}
+                        aria-label="Save Proof"
+                        className="py-3 px-4 rounded-lg bg-neon-blue/10 hover:bg-neon-blue/20 text-neon-blue border border-neon-blue/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.2)]"
+                    >
+                        <Download className="w-4 h-4" /> {showReceipt ? "SAVE RECEIPT" : "SAVE EVIDENCE"}
+                    </button>
+                </div>
+            </div>
 
         </motion.div >
     );
