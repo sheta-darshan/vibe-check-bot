@@ -25,14 +25,19 @@ describe('Reality Engine 3.0', () => {
     })
 
     // 2. Negation Logic
-    it('should understand negation (not quitting sugar)', () => {
-        const positive = analyzeResolutionLogic("I will quit sugar")
-        const negative = analyzeResolutionLogic("I will NOT quit sugar")
+    it('should understand robust negation (won\'t quit sugar)', () => {
+        // "Quit sugar" is usually -40 (Delusional).
+        // "Won't quit sugar" should flip it to positive (Realistic/Achievable)
+        // because "quit" is negated.
+        const result = analyzeResolutionLogic("I won't quit sugar")
+        // Base 50 + (-(-40) * 0.5) = 50 + 20 = 70 (Optimistic/Achievable range)
+        expect(result.score).toBeGreaterThan(60)
+    })
 
-        // "Quit sugar" is delusional (-40 weight)
-        // "Not quit sugar" flips the weight (-(-40)*0.5 = +20) -> Score goes UP
-
-        expect(negative.score).toBeGreaterThan(positive.score)
+    it('should understand expanded contractions (do not eat)', () => {
+        // "eat" is +10. "do not eat" -> -5. Base 50 -> 45.
+        const result = analyzeResolutionLogic("I do not eat vegetables")
+        expect(result.score).toBeLessThan(50)
     })
 
     // 3. Categorization

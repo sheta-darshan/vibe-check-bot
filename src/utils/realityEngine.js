@@ -173,13 +173,52 @@ const ROASTS = {
     ]
 }
 
-// Helper for negation detection
-const MatchIsNegated = (fullText, keyword, negationList) => {
-    const idx = fullText.indexOf(keyword);
-    if (idx < 3) return false;
+const CONTRACTION_MAP = {
+    "don't": "do not",
+    "won't": "will not",
+    "can't": "cannot",
+    "shouldn't": "should not",
+    "wouldn't": "would not",
+    "couldn't": "could not",
+    "isn't": "is not",
+    "aren't": "are not",
+    "haven't": "have not",
+    "hasn't": "has not",
+    "hadn't": "had not",
+    "didn't": "did not"
+};
 
-    const precedingText = fullText.substring(Math.max(0, idx - 15), idx); // Check last 15 chars
-    return negationList.some(neg => precedingText.includes(neg));
+// Robust Negation Helper
+const getRobustNegation = (tokens, keyword, negationList) => {
+    const keyTokens = keyword.toLowerCase().split(/[^a-z0-9]+/);
+    const firstKeyWord = keyTokens[0];
+
+    // Find all indices of the first word of the keyword
+    const startIndices = tokens.reduce((acc, token, index) => {
+        if (token === firstKeyWord) acc.push(index);
+        return acc;
+    }, []);
+
+    // Check sliding window for each valid occurrence
+    for (const dataIndex of startIndices) {
+        // Verify full phrase match if multi-word
+        let isMatch = true;
+        for (let i = 1; i < keyTokens.length; i++) {
+            if (tokens[dataIndex + i] !== keyTokens[i]) {
+                isMatch = false;
+                break;
+            }
+        }
+
+        if (isMatch) {
+            const start = Math.max(0, dataIndex - 3);
+            const window = tokens.slice(start, dataIndex);
+            if (window.some(token => negationList.includes(token))) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 export const analyzeResolutionLogic = (input, isMatrix = false) => {
@@ -201,19 +240,27 @@ export const analyzeResolutionLogic = (input, isMatrix = false) => {
     })
 
     // 1. Keyword Analysis & Negation
-    const words = text.split(/\s+/)
-    const negationWords = ['not', "won't", "don't", 'stop', 'quit', 'no', 'never']
+    // Normalize and Expand Contractions
+    let normalizedText = text;
+    Object.keys(CONTRACTION_MAP).forEach(contraction => {
+        const regex = new RegExp(`\\b${contraction}\\b`, 'gi');
+        normalizedText = normalizedText.replace(regex, CONTRACTION_MAP[contraction]);
+    });
+
+    const tokens = normalizedText.split(/[^a-z0-9]+/); // Tokenize by removing non-alphanumeric chars
+
     Object.keys(REALITY_WEIGHTS).forEach(key => {
         const regex = new RegExp(`\\b${key}\\b`, 'i');
         if (regex.test(text)) {
-            const negIndex = words.findIndex(w => negationWords.includes(w))
-            const keyIndex = text.indexOf(key)
-            let weight = REALITY_WEIGHTS[key]
-            if (negIndex !== -1 && keyIndex > -1 && MatchIsNegated(text, key, negationWords)) {
+            let weight = REALITY_WEIGHTS[key];
+
+            // Robust Negation Check
+            if (getRobustNegation(tokens, key, ['not', 'no', 'never', 'stop', 'quit', 'avoid', 'cease'])) {
                 weight = -weight * 0.5;
             }
-            baseScore += weight
-            matchCount++
+
+            baseScore += weight;
+            matchCount++;
         }
     })
 
