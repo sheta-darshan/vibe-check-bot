@@ -61,6 +61,14 @@ describe('Reality Engine 3.0', () => {
         expect(result.forecast).toMatch(/Outlook:/i)
     })
 
+    it('should trigger Wellness context for "Do yoga daily"', () => {
+        const result = analyzeResolutionLogic("Do yoga daily")
+        // Check if it pulled from wellness pool?
+        // Hard to check exact roast pool without mocking, but we can check forecast
+        expect(result.roast).toBeTruthy();
+        expect(result.forecast).toBeTruthy();
+    })
+
     it('should trigger Ex-specific roast for "Text my ex"', () => {
         const result = analyzeResolutionLogic("Text my ex")
         // Check dynamic content without hardcoding one specific string

@@ -20,13 +20,16 @@ export const tokenize = (text) => {
 
 export const getContextTags = (tokens) => {
     const tags = new Set();
-    const tokenStr = tokens.join(' ');
+    // Simple join for checking substrings?
+    // Better: Check tokens against mapping arrays
 
-    if (tokenStr.includes('code') || tokenStr.includes('app') || tokenStr.includes('api') || tokenStr.includes('dev')) tags.add('career');
-    if (tokenStr.includes('crypto') || tokenStr.includes('stock') || tokenStr.includes('trade')) tags.add('crypto');
-    if (tokenStr.includes('love') || tokenStr.includes('date') || tokenStr.includes('marry') || tokenStr.includes('crush') || tokenStr.includes('ex')) tags.add('love');
-    if (tokenStr.includes('job') || tokenStr.includes('work') || tokenStr.includes('boss') || tokenStr.includes('hustle')) tags.add('career');
-    if (tokenStr.includes('diet') || tokenStr.includes('eat') || tokenStr.includes('food') || tokenStr.includes('vegan') || tokenStr.includes('keto')) tags.add('diet');
+    Object.keys(ENGINE_CONFIG.CONTEXT_MAPPINGS).forEach(context => {
+        const keywords = ENGINE_CONFIG.CONTEXT_MAPPINGS[context];
+        // Check if ANY keyword exists in tokens
+        if (tokens.some(t => keywords.includes(t))) {
+            tags.add(context);
+        }
+    });
 
     return Array.from(tags);
 };

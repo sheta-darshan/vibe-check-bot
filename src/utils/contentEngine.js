@@ -100,6 +100,32 @@ const ROASTS = {
         "Calories don't count on weekends (false).",
         "Your metabolism is slowing down as we speak.",
         "Eating greens won't fix your red flags.",
+    ],
+    finance: [
+        "Your portfolio is redder than your flags.",
+        "Buy high, sell low, cry always.",
+        "Dropshipping is not a career, it's a donation to Zuckerberg.",
+        "Financial freedom? Start with financial literacy.",
+        "NF-No.",
+    ],
+    wellness: [
+        "Mental health walk? You mean avoiding responsibilities.",
+        "Your chakras are aligned but your life is a mess.",
+        "Manifesting checks that you can't cash.",
+        "Mercury is not in retrograde, you're just annoying.",
+        "Buying crystals won't fix your credit score.",
+    ],
+    academic: [
+        "Due tomorrow? Do tomorrow.",
+        "PhD: Permanent Head Damage.",
+        "Check Chegg before you wreck yourself.",
+        "Academic comeback? You need an academic miracle.",
+    ],
+    social: [
+        "Touch grass. Just once. Please.",
+        "Your screen time is higher than your GPA.",
+        "Main character syndrome is not a personality.",
+        "Do it for the plot? The plot is terrible.",
     ]
 };
 
@@ -141,6 +167,26 @@ const FORECASTS = {
         "Outlook: Cheat day is coming. It's today.",
         "Outlook: Kale tastes like sadness. Good luck.",
         "Outlook: Pizza is calling. Do not answer.",
+    ],
+    finance: [
+        "Outlook: Bankruptcy protection filing imminent.",
+        "Outlook: IRS has entered the chat.",
+        "Outlook: Ramen noodles for dinner. Forever.",
+    ],
+    wellness: [
+        "Outlook: Toxic positivity levels reaching critical mass.",
+        "Outlook: You will buy expensive supplements and forget them.",
+        "Outlook: Namaste in bed.",
+    ],
+    academic: [
+        "Outlook: 3AM caffeine overdose likely.",
+        "Outlook: C's get degrees (but not jobs).",
+        "Outlook: Library fines exceeding tuition.",
+    ],
+    social: [
+        "Outlook: Canceled on Twitter.",
+        "Outlook: Left on read by everyone.",
+        "Outlook: Viral for the wrong reasons.",
     ]
 };
 
