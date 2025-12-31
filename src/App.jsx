@@ -33,6 +33,10 @@ const TRENDING_PRESETS = [
 ]
 
 function App() {
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0])
+  const [result, setResult] = useState(null)
   const [isSharing, setIsSharing] = useState(false)
 
   // Initialize history from localStorage
@@ -231,11 +235,6 @@ function App() {
   const updateClipboardItem = (blob) => {
     return new ClipboardItem({ [blob.type]: blob });
   }
-
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0])
-  const [result, setResult] = useState(null)
 
   return (
     <div className={`min-h-screen w-full flex flex-col items-center justify-center p-4 relative overflow-x-hidden font-sans selection:bg-neon-pink selection:text-white transition-colors duration-1000 ${isMatrix ? 'grayscale hue-rotate-90 contrast-125' : ''}`}>
