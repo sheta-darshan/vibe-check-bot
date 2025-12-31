@@ -175,9 +175,8 @@ function App() {
       canvas.toBlob(async (blob) => {
         const file = new File([blob], 'vibe-check-result.png', { type: 'image/png' });
         const shareData = {
-          files: [file],
           title: '2026 Vibe Auditor',
-          text: `My 2026 Reality Audit: ${result.category.toUpperCase()}! 📋 Reality Score: ${result.score}% Audit: "${result.roast}" Get your audit here: https://sheta-darshan.github.io/vibe-check-bot/`,
+          text: `My 2026 Reality Audit: ${result.category.toUpperCase()}! 📋 Reality Score: ${result.score}% Audit: "${result.roast}" #VibeAuditor #Delulu #2026Goals #RoastedByAI https://sheta-darshan.github.io/vibe-check-bot/`,
           url: 'https://sheta-darshan.github.io/vibe-check-bot/'
         };
 
