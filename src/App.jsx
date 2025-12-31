@@ -185,30 +185,39 @@ function App() {
           return;
         }
 
-        const file = new File([blob], 'vibe-check-result.png', { type: 'image/png' });
+        const file = new File([blob], 'vibe-check-result.jpg', { type: 'image/jpeg' });
         const shareData = {
-          title: '2026 Vibe Auditor',
-          text: `My 2026 Reality Audit: ${result.category.toUpperCase()}! 📋 Reality Score: ${result.score}% Audit: "${result.roast}" #VibeAuditor #Delulu #2026Goals #RoastedByAI https://sheta-darshan.github.io/vibe-check-bot/`
+          text: `My 2026 Reality Audit: ${result.category.toUpperCase()}! 📋 Score: ${result.score}% "${result.roast}" #VibeAuditor https://sheta-darshan.github.io/vibe-check-bot/`
         };
 
-        // Try native share
-        if (navigator.share && navigator.canShare({ files: [file], ...shareData })) {
+        // 1. Silent Copy to Clipboard (Backup)
+        try {
+          const item = new ClipboardItem({ [blob.type]: blob });
+          navigator.clipboard.write([item]).catch(() => { }); // Try image
+          navigator.clipboard.writeText(shareData.text).catch(() => { }); // Try text
+        } catch (e) {
+          // IOS specific backup
+          navigator.clipboard.writeText(shareData.text).catch(() => { });
+        }
+
+        // 2. Native Share
+        if (navigator.share && navigator.canShare({ files: [file], text: shareData.text })) {
           try {
             await navigator.share({
               files: [file],
-              ...shareData
+              text: shareData.text
             });
           } catch (shareErr) {
             if (shareErr.name !== 'AbortError') {
               console.error("Native share failed:", shareErr);
-              await fallbackShare(blob, shareData);
             }
           }
         } else {
-          await fallbackShare(blob, shareData);
+          // If native share fails/unsupported, we silently relied on clipboard
+          alert("Image copied to clipboard! (Sharing not supported)");
         }
         setIsSharing(false);
-      }, 'image/png');
+      }, 'image/jpeg', 0.8);
     } catch (err) {
       console.error("Share failed:", err);
       setIsSharing(false);
@@ -218,16 +227,12 @@ function App() {
 
   // Separated fallback logic
   const fallbackShare = async (blob, shareData) => {
-    // Fallback: Copy Image or Text to Clipboard
+    // Just copy to clipboard silently
     try {
-      // Try copying image to clipboard if supported (Desktop)
       const item = updateClipboardItem(blob);
       await navigator.clipboard.write([item]);
-      alert("Image copied to clipboard! Paste it anywhere to share.");
     } catch (clipboardErr) {
-      // Ultimate fallback: Copy text only
       await navigator.clipboard.writeText(shareData.text);
-      alert("Result text copied to clipboard! (Image sharing not supported on this device)");
     }
   };
 

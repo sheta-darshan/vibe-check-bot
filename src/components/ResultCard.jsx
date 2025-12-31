@@ -108,7 +108,7 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                             </div>
                             <div className="text-right">
                                 <div className="text-[10px] text-gray-500 font-mono">{timestamp}</div>
-                                {/* Removed Official Analysis Text */}
+                                <div className="text-[10px] text-neon-blue/70 font-mono mt-1">sheta-darshan.github.io/vibe-check-bot</div>
                             </div>
                         </div>
                     </>
