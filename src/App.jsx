@@ -8,6 +8,7 @@ import Header from './components/Header'
 import ResultCard from './components/ResultCard'
 import HistoryTape from './components/HistoryTape'
 import useInternalAudio from './hooks/useInternalAudio'
+import useTTS from './hooks/useTTS'
 import { analyzeResolutionLogic } from './utils/realityEngine'
 
 // Constants
@@ -30,7 +31,20 @@ const TRENDING_PRESETS = [
   "Save $100k",
   "Wake up at 5AM",
   "Become a crypto whale",
+  "Wake up at 5AM",
+  "Become a crypto whale",
 ]
+
+const VIBE_ROULETTE = [
+  "Marry a rich old man",
+  "Quit my job to sell feet pics",
+  "Become a spiritual life coach",
+  "Move to Bali and finding myself",
+  "Launch a podcast about nothing",
+  "Trade crypto until I'm homeless",
+  "Become a full-time influencer",
+  "Only drink raw milk",
+];
 
 function App() {
   const [input, setInput] = useState('')
@@ -54,6 +68,7 @@ function App() {
   const inputRef = useRef(null)
   const resultCardRef = useRef(null)
   const { enabled: audioEnabled, setEnabled: setAudioEnabled, playHover, playClick, playSuccess, playFail } = useInternalAudio()
+  const { speak, isSpeaking } = useTTS()
 
   useEffect(() => {
     if (input.toLowerCase().includes('matrix')) {
@@ -158,16 +173,68 @@ function App() {
     });
   };
 
-  const downloadCard = async () => {
+  const handleRoulette = () => {
+    playClick();
+    const random = VIBE_ROULETTE[Math.floor(Math.random() * VIBE_ROULETTE.length)];
+    setInput(random);
+  }
+
+  const downloadCard = async (mode = 'standard') => {
     playClick()
     try {
       console.log("Starting download capture...")
-      const canvas = await generateResultCanvas();
-      if (!canvas) return;
+      const cardCanvas = await generateResultCanvas();
+      if (!cardCanvas) return;
 
-      const dataUrl = canvas.toDataURL('image/png')
+      let finalCanvas = cardCanvas;
+
+      // STORY MODE (9:16)
+      if (mode === 'story') {
+        const width = 1080;
+        const height = 1920;
+        finalCanvas = document.createElement('canvas');
+        finalCanvas.width = width;
+        finalCanvas.height = height;
+        const ctx = finalCanvas.getContext('2d');
+
+        // Draw Cyber Background
+        const gradient = ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, '#1a0b2e');
+        gradient.addColorStop(1, '#000000');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+
+        // Add Glow
+        ctx.shadowColor = '#ff00ff';
+        ctx.shadowBlur = 50;
+        ctx.fillStyle = 'rgba(255, 0, 255, 0.1)';
+        ctx.beginPath();
+        ctx.arc(width / 2, height / 2, 400, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Center the Card
+        const scale = Math.min((width - 100) / cardCanvas.width, 1); // Fit width with padding
+        const drawWidth = cardCanvas.width * scale;
+        const drawHeight = cardCanvas.height * scale;
+        const x = (width - drawWidth) / 2;
+        const y = (height - drawHeight) / 2;
+
+        ctx.drawImage(cardCanvas, x, y, drawWidth, drawHeight);
+
+        // Branding
+        ctx.font = 'bold 40px Courier New';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.textAlign = 'center';
+        ctx.fillText("AUDIT YOUR DELUSIONS", width / 2, y + drawHeight + 100);
+        ctx.font = '30px Courier New';
+        ctx.fillStyle = 'rgba(0, 255, 255, 0.7)';
+        ctx.fillText("sheta-darshan.github.io/vibe-check-bot", width / 2, height - 100);
+      }
+
+      const dataUrl = finalCanvas.toDataURL('image/png')
       const link = document.createElement('a')
-      link.download = `vibe-check-result-${Date.now()}.png`
+      link.download = `vibe-check-${mode}-${Date.now()}.png`
       link.href = dataUrl
       document.body.appendChild(link)
       link.click()
@@ -293,6 +360,15 @@ function App() {
                   onChange={(e) => setInput(e.target.value)}
                   onMouseEnter={playHover}
                 />
+
+                {/* Vibe Roulette */}
+                <button
+                  onClick={handleRoulette}
+                  className="absolute right-4 bottom-4 text-xs font-mono text-neon-pink hover:text-white transition-colors opacity-70 hover:opacity-100"
+                  title="Random Vibe"
+                >
+                  🎲 ROULETTE
+                </button>
               </div>
 
               {/* Trending Presets */}
@@ -342,10 +418,11 @@ function App() {
               input={input}
               resultCardRef={resultCardRef}
               reset={reset}
-              downloadCard={downloadCard}
               shareResult={shareResult}
               isSharing={isSharing}
               playHover={playHover}
+              speak={speak}
+              isSpeaking={isSpeaking}
             />
           )}
 

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Skull, AlertTriangle, Sparkles, RefreshCw, Download, ShieldCheck, Share2, ScrollText } from 'lucide-react';
 import ReceiptCard from './ReceiptCard';
 
-const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareResult, isSharing, playHover }) => {
+const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareResult, isSharing, playHover, speak, isSpeaking }) => {
     // Generate timestamp once on render
     const timestamp = new Date().toLocaleDateString('en-US', {
         day: 'numeric',
@@ -99,6 +99,17 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                             </p>
                         </div>
 
+                        {/* TTS Button */}
+                        <div className="flex justify-center -mt-2 mb-4">
+                            <button
+                                onClick={() => speak(`${result.category}. ${result.roast}`)}
+                                disabled={isSpeaking}
+                                className="text-[10px] flex items-center gap-1 text-neon-blue/70 hover:text-neon-blue transition-colors uppercase tracking-widest disabled:opacity-50"
+                            >
+                                {isSpeaking ? <span className="animate-pulse">Speaking...</span> : "🔊 Read to Filth"}
+                            </button>
+                        </div>
+
                         <div className="mt-8 pt-4 border-t border-white/10 flex justify-between items-end">
                             <div className="text-left">
                                 <div className="text-[10px] text-gray-500 font-mono mb-1">CASE FILE NO. 2026-{Math.floor(Math.random() * 9000) + 1000}</div>
@@ -128,24 +139,36 @@ const ResultCard = ({ result, input, resultCardRef, reset, downloadCard, shareRe
                 </button>
 
                 {/* Secondary Actions: Share & Download */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                     <button
                         onClick={shareResult}
                         onMouseEnter={playHover}
                         aria-label="Share Result"
                         disabled={isSharing}
-                        className="py-3 px-4 rounded-lg bg-neon-purple/10 hover:bg-neon-purple/20 text-neon-pink border border-neon-pink/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(255,0,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Share Link"
+                        className="py-3 px-2 rounded-lg bg-neon-purple/10 hover:bg-neon-purple/20 text-neon-pink border border-neon-pink/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(255,0,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Share2 className={`w-4 h-4 ${isSharing ? 'animate-pulse' : ''}`} />
-                        {isSharing ? 'GENERATING EVIDENCE...' : 'EXPOSE MYSELF'}
                     </button>
+
                     <button
-                        onClick={downloadCard}
+                        onClick={() => downloadCard('story')}
+                        onMouseEnter={playHover}
+                        aria-label="Story Mode"
+                        title="Download for Instagram Story"
+                        className="py-3 px-2 rounded-lg bg-neon-green/10 hover:bg-neon-green/20 text-neon-green border border-neon-green/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(0,255,0,0.2)]"
+                    >
+                        <div className="text-[10px] uppercase tracking-tighter">Story</div>
+                    </button>
+
+                    <button
+                        onClick={() => downloadCard('standard')}
                         onMouseEnter={playHover}
                         aria-label="Save Proof"
-                        className="py-3 px-4 rounded-lg bg-neon-blue/10 hover:bg-neon-blue/20 text-neon-blue border border-neon-blue/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.2)]"
+                        title="Download Image"
+                        className="py-3 px-2 rounded-lg bg-neon-blue/10 hover:bg-neon-blue/20 text-neon-blue border border-neon-blue/30 font-bold flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.2)]"
                     >
-                        <Download className="w-4 h-4" /> {showReceipt ? "SAVE RECEIPT" : "SAVE EVIDENCE"}
+                        <Download className="w-4 h-4" />
                     </button>
                 </div>
             </div>
