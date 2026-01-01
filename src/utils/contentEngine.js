@@ -1,3 +1,5 @@
+import { generateDynamicRoast } from './dynamicEngine';
+
 export const DIRECT_HITS = {
     'gym': [
         "We both know you're canceling that membership in Feb.",
@@ -205,7 +207,21 @@ export const generateContent = (category, contextTags, tokens) => {
         }
     }
 
-    // 2. Select Roast Pool
+
+    // 2. Try Dynamic Roast (Smart Templates)
+    // 50% chance to use dynamic content if available, to keep variety
+    if (Math.random() > 0.3) {
+        const dynamic = generateDynamicRoast(tokens.join(' ')); // simple join for now
+        if (dynamic) {
+            return {
+                roast: dynamic,
+                forecast: getForecast(category, contextTags),
+                isDirectHit: false
+            };
+        }
+    }
+
+    // 3. Select Roast Pool
     let roastPool = ROASTS[category] || ROASTS.optimistic;
 
     // Add context-specific roasts
