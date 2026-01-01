@@ -13,37 +13,52 @@ import { analyzeResolutionLogic } from './utils/realityEngine'
 
 // Constants
 const LOADING_MESSAGES = [
-  "Scanning for audacity...",
+  "Scanning for audacity levels...",
   "Consulting the 2025 burnout archives...",
   "Calculating delusion coefficient...",
-  "Checking bank balance...",
-  "Asking GPT-5 if this is a joke...",
-  "Measuring vibe alignment...",
-  "Cross-referencing with reality...",
-  "Loading harsh truths...",
-  "Decrypting dream state...",
+  "Running Bayes' Theorem on your success rate...",
+  "Asking GPT-6 if this is a joke...",
+  "Measuring vibe alignment (it's looking shaky)...",
+  "Cross-referencing with your empty savings account...",
+  "Downloading common sense... Error 404.",
+  "Analyzing your 2025 'learning' data (mostly Netflix)...",
+  "Simulating 1,000 timelines where you actually do this...",
+  "Backtesting your life choices against the Nifty 50...",
+  "Fetching your LinkedIn 'Ex-Founder' title...",
+  "Optimizing for maximum disappointment...",
+  "Checking if your 6-year-old is more mature than you...",
 ]
 
 const TRENDING_PRESETS = [
   "Drink 3L water daily",
   "Quit sugar completely",
   "Learn Rust & Go",
+  "Master PyTorch in 30 days",
   "Save $100k",
   "Wake up at 5AM",
-  "Become a crypto whale",
-  "Wake up at 5AM",
-  "Become a crypto whale",
+  "Build a profitable trading bot",
+  "Automate my entire job with AI",
+  "Switch to Arch Linux",
+  "Reach 100% test coverage",
+  "Read 52 books this year",
+  "Finally finish that Python decorator tutorial",
+  "Unsubscribe from every newsletter",
 ]
 
 const VIBE_ROULETTE = [
-  "Marry a rich old man",
   "Quit my job to sell feet pics",
-  "Become a spiritual life coach",
-  "Move to Bali and finding myself",
+  "Become a spiritual life coach in Bali",
   "Launch a podcast about nothing",
-  "Trade crypto until I'm homeless",
-  "Become a full-time influencer",
-  "Only drink raw milk",
+  "Trade Nifty options until I'm homeless",
+  "Become a full-time influencer for 'Clean Eating'",
+  "Start an underground LeetCode betting ring",
+  "Live in a Faraday cage for a 'digital detox'",
+  "Pivot to AI Safety (just screaming at servers)",
+  "Build a DAO to manage my child's allowance",
+  "Attempt to index the dark web on a Raspberry Pi",
+  "Only eat food mentioned in Joe Rogan's podcast",
+  "Delete my digital footprint and move to a farm",
+  "Apply for a job I'm 0% qualified for with total confidence",
 ];
 
 function App() {
