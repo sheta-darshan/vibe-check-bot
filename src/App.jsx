@@ -78,6 +78,14 @@ function App() {
     })
   }
 
+  /**
+   * Main function to analyze the user's input/resolution.
+   * - Plays click sound
+   * - Sets loading state with rotation messages
+   * - Calls the separated logic engine (analyzeResolutionLogic)
+   * - Updates result state and history
+   * - Triggers confetti/sound effects based on result category
+   */
   const analyzeResolution = () => {
     if (!input.trim()) return
 
@@ -127,6 +135,10 @@ function App() {
   }
 
   // Reusable helper for generating the image canvas
+  /**
+   * Capture the ResultCard as an image using html2canvas.
+   * @returns {Promise<HTMLCanvasElement|null>} The generated canvas or null if ref is missing.
+   */
   const generateResultCanvas = async () => {
     if (!resultCardRef.current) return null;
 
