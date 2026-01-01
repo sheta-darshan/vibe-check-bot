@@ -364,7 +364,7 @@ function App() {
                 {/* Vibe Roulette */}
                 <button
                   onClick={handleRoulette}
-                  className="absolute right-4 bottom-4 text-xs font-mono text-neon-pink hover:text-white transition-colors opacity-70 hover:opacity-100"
+                  className="absolute right-2 top-2 text-[10px] md:text-xs font-mono text-neon-pink hover:text-white transition-colors opacity-70 hover:opacity-100 bg-black/20 px-2 py-1 rounded"
                   title="Random Vibe"
                 >
                   🎲 ROULETTE
