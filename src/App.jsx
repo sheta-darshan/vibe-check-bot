@@ -149,9 +149,9 @@ function App() {
     }
   }
 
-  // Reusable helper for generating the image canvas
-  /**
-   * Capture the ResultCard as an image using html2canvas.
+  /* 
+   * Generates a canvas from the ResultCard ref using html2canvas.
+   * Handles styling adjustments for the capture (e.g., text shadows).
    * @returns {Promise<HTMLCanvasElement|null>} The generated canvas or null if ref is missing.
    */
   const generateResultCanvas = async () => {
@@ -182,7 +182,6 @@ function App() {
   const downloadCard = async (mode = 'standard') => {
     playClick()
     try {
-      console.log("Starting download capture...")
       const cardCanvas = await generateResultCanvas();
       if (!cardCanvas) return;
 
@@ -419,6 +418,7 @@ function App() {
               resultCardRef={resultCardRef}
               reset={reset}
               shareResult={shareResult}
+              downloadCard={downloadCard}
               isSharing={isSharing}
               playHover={playHover}
               speak={speak}
