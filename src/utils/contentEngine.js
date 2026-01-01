@@ -211,7 +211,7 @@ export const generateContent = (category, contextTags, tokens) => {
     // 2. Try Dynamic Roast (Smart Templates)
     // 50% chance to use dynamic content if available, to keep variety
     if (Math.random() > 0.3) {
-        const dynamic = generateDynamicRoast(tokens.join(' ')); // simple join for now
+        const dynamic = generateDynamicRoast(tokens.join(' '), category); // simple join for now
         if (dynamic) {
             return {
                 roast: dynamic,
