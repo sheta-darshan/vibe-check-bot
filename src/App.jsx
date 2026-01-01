@@ -159,7 +159,7 @@ function App() {
 
     return await html2canvas(resultCardRef.current, {
       backgroundColor: '#1a0b2e',
-      scale: 3,
+      scale: 2, // Reduced from 3 to prevent mobile crashes and large file sizes
       useCORS: true,
       logging: false, // Cleaner logs
       onclone: (clonedDoc) => {
